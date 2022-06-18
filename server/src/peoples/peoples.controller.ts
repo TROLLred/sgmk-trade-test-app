@@ -18,6 +18,11 @@ export class PeoplesController {
         return this.peoplesService.getAllPeoples();
     }
 
+    @Get(':id')
+    getOne(@Param('id') id: string) {
+        return this.peoplesService.getOnePeople(id);
+    }
+
     @Delete(':id')
     remove(@Param('id') id: string) {
         return this.peoplesService.removePeople(id);

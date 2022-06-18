@@ -69,26 +69,26 @@
             </v-menu>
         </template>
 
-        <template v-slot:[`header.phoneNumber`]="{ header }">
+        <template v-slot:[`header.phonenumber`]="{ header }">
             {{ header.text }}
             <v-menu offset-y :close-on-content-click="false">
                 <template v-slot:activator="{ on, attrs }">
                     <v-btn icon v-bind="attrs" v-on="on">
-                        <v-icon small :color="phoneNumber ? 'primary' : ''">
+                        <v-icon small :color="phonenumber ? 'primary' : ''">
                             mdi-filter
                         </v-icon>
                     </v-btn>
                 </template>
                 <div style="background-color: white; width: 280px">
                     <v-text-field
-                        v-model="phoneNumber"
+                        v-model="phonenumber"
                         class="pa-4"
                         type="text"
                         label="Введите поисковой запрос"
                         :autofocus="true"
                     ></v-text-field>
                     <v-btn
-                        @click="phoneNumber = ''"
+                        @click="phonenumber = ''"
                         small
                         text
                         color="primary"
@@ -123,7 +123,7 @@ export default {
         return {
             name: '',
             surname: '',
-            phoneNumber: '',
+            phonenumber: '',
         }
     },
     computed: {
@@ -135,7 +135,7 @@ export default {
             if (this.surname) {
                 conditions.push(this.filterSurname);
             }
-            if (this.phoneNumber) {
+            if (this.phonenumber) {
                 conditions.push(this.filterPhoneNumber);
             }
             if (conditions.length > 0) {
@@ -156,7 +156,7 @@ export default {
             return item.surname.toLowerCase().includes(this.surname.toLowerCase());
         },
         filterPhoneNumber(item) {
-            return item.phoneNumber.toLowerCase().includes(this.phoneNumber.toLowerCase());
+            return item.phonenumber.toLowerCase().includes(this.phonenumber.toLowerCase());
         },
     }
 }

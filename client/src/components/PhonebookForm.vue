@@ -32,7 +32,7 @@
                 sm="4"
             >
                 <v-text-field 
-                    v-model="phoneNumber" 
+                    v-model="phonenumber" 
                     label="Телефон" 
                     placeholder="+7 (777) 777-77-77" 
                     :rules="[rules.required, rules.numberFormat]"
@@ -68,7 +68,7 @@ export default {
     data: () => ({
         name: '',
         surname: '',
-        phoneNumber: '',
+        phonenumber: '',
         address: '',
         rules: {
             required: value => !!value || 'Обязательное поле',
@@ -90,7 +90,7 @@ export default {
                 if (this.surname.trim() === '') {
                     throw new Error('Вы не ввели фамилию')
                 }
-                if (this.phoneNumber.trim() === '') {
+                if (this.phonenumber.trim() === '') {
                     throw new Error('Вы не ввели телефон')
                 }
                 if (this.address.trim() === '') {
@@ -101,7 +101,7 @@ export default {
                     id: Date.now(),
                     name: this.name,
                     surname: this.surname,
-                    phoneNumber: this.phoneNumber,
+                    phonenumber: this.phonenumber,
                     address: this.address,
                 };
                 /* Прокидываем его колбэком наверх */
@@ -109,14 +109,14 @@ export default {
                 /* Очищаем поля */
                 this.name = ' ';
                 this.surname = ' ';
-                this.phoneNumber = ' ';
+                this.phonenumber = ' ';
                 this.address = ' ';
             } catch (err) {
                 alert(`Осторожно, ${err.message}. Будьте внимательнее.`);
             } finally {
                 /* this.name = '';
                 this.surname = '';
-                this.phoneNumber = '';
+                this.phonenumber = '';
                 this.address = ''; */
             }
         }

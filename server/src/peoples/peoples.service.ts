@@ -17,13 +17,14 @@ export class PeoplesService {
         const peoples = await this.peopleRepository.findAll();
         return peoples;
     }
-    /*findOne(id: string): Promise<People> {
-        return this.peopleRepository.findOne({
+    async getOnePeople(id: string): Promise<People> {
+        const people = await this.peopleRepository.findOne({
             where: {
                 id,
             }
-        })
-    }*/
+        });
+        return people;
+    }
     async removePeople(id: string): Promise<void> {
         const people = await this.peopleRepository.findOne({
             where: {
