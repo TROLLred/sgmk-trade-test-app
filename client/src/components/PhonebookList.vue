@@ -5,6 +5,8 @@
         :items-per-page="10"
         sort-by="surname"
         class="table elevation-2"
+        :loading="loading"
+        loading-text="Loading... Please wait"
     >
         <!-- Добавление фильтров в заголовки -->
         <template v-slot:[`header.name`]="{ header }">
@@ -99,6 +101,37 @@
                 </div>
             </v-menu>
         </template>
+
+        <template v-slot:[`header.address`]="{ header }">
+            {{ header.text }}
+            <v-menu offset-y :close-on-content-click="false">
+                <template v-slot:activator="{ on, attrs }">
+                    <v-btn icon v-bind="attrs" v-on="on">
+                        <v-icon small :color="address ? 'primary' : ''">
+                            mdi-filter
+                        </v-icon>
+                    </v-btn>
+                </template>
+                <div style="background-color: white; width: 280px">
+                    <v-text-field
+                        v-model="address"
+                        class="pa-4"
+                        type="text"
+                        label="Введите поисковой запрос"
+                        :autofocus="true"
+                    ></v-text-field>
+                    <v-btn
+                        @click="address = ''"
+                        small
+                        text
+                        color="primary"
+                        class="ml-2 mb-2"
+                    >
+                        Очистить
+                    </v-btn>
+                </div>
+            </v-menu>
+        </template>
         <!-- Добавляю колонку с кнопкми удаления -->
         <template v-slot:[`item.actions`]="{ item }"> <!-- Eslinter считает, что v-slot:item.actions - ошибка))) -->
             <v-icon small @click="$emit('openDialog', item)"> <!-- Посылаю колбэком вверх пользователя на удаление -->
@@ -117,6 +150,10 @@ export default {
         items: {
             type: [Array, Object],
             required: true,
+        },
+        loading: {
+            type: Boolean,
+            required: true,
         }
     },
     data () {
@@ -124,6 +161,7 @@ export default {
             name: '',
             surname: '',
             phonenumber: '',
+            address: '',
         }
     },
     computed: {
@@ -137,6 +175,9 @@ export default {
             }
             if (this.phonenumber) {
                 conditions.push(this.filterPhoneNumber);
+            }
+            if (this.address) {
+                conditions.push(this.filterAddress);
             }
             if (conditions.length > 0) {
                 return this.items.filter((item) => {
@@ -157,6 +198,9 @@ export default {
         },
         filterPhoneNumber(item) {
             return item.phonenumber.toLowerCase().includes(this.phonenumber.toLowerCase());
+        },
+        filterAddress(item) {
+            return item.address.toLowerCase().includes(this.address.toLowerCase());
         },
     }
 }

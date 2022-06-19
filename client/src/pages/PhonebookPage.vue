@@ -7,6 +7,7 @@
             :headers="headers"
             :items="chechens"
             @openDialog="openDialog"
+            :loading="isChechensLoading"
         />
         <phonebook-modal-delete
             :item="currentItem"
@@ -19,6 +20,7 @@
 import PhonebookForm from '@/components/PhonebookForm.vue';
 import PhonebookList from '@/components/PhonebookList.vue';
 import PhonebookModalDelete from '@/components/PhonebookModalDelete.vue';
+import axios from 'axios';
 
 export default {
     components: {
@@ -30,6 +32,7 @@ export default {
         return {
             currentItem: {},
             dialogVisible: false,
+            isChechensLoading: true,
             headers: [
                 { text: 'Имя', align: 'start', value: 'name', width: '22%', },
                 { text: 'Фамилия', value: 'surname', width: '22%', },
@@ -38,7 +41,7 @@ export default {
                 { text: 'Действия', value: 'actions', sortable: false, align: 'center', width: '7%', },
             ],
             chechens: [
-                {
+                /*{
                     id: 1,
                     name: "Руслан",
                     surname: "Гилаев",
@@ -142,27 +145,57 @@ export default {
                     surname: "Безглазов",
                     phonenumber: "+7 888 888 88 88",
                     address: "ул. Радищева, д. 88",
-                },
+                },*/
             ],
         }
     },
     mounted() {
-        // fetchChechens()
+        this.fetchChechens();
     },
     methods: {
-        /*fetchChechens() {
-            // get запрос с базы данных на сервере
-        },*/
-        addItem(item) {
-            this.chechens.push(item);
+        /* Get-запрос с сервера */
+        async fetchChechens() {
+            try {
+                // get запрос с базы данных на сервере
+                this.isChechensLoading = true;
+                const response = await axios.get('http://localhost:5000/peoples')
+                this.chechens = response.data;
+            } catch (err) {
+                alert(err.message);
+            } finally {
+                this.isChechensLoading = false;
+            }
         },
+        /* Post-запрос на сервер */
+        async addItem(item) {
+            //this.chechens.push(item);
+            try {
+                await axios.post('http://localhost:5000/peoples', {
+                    name: item.name,
+                    surname: item.surname,
+                    phonenumber: item.phonenumber,
+                    address: item.address,
+                })
+                this.fetchChechens();
+            } catch (err) {
+                alert(err.message);
+            }
+        },
+        /* Логика удаления */
         openDialog(item) {
             this.currentItem = item;
             this.dialogVisible = true;
         },
-        removeItem() {
-            this.chechens = this.chechens.filter(i => i.id !== this.currentItem.id);
-            this.currentItem = {};
+        async removeItem() {
+            //this.chechens = this.chechens.filter(i => i.id !== this.currentItem.id);
+            try {
+                await axios.delete('http://localhost:5000/peoples/' + this.currentItem.id)
+                this.fetchChechens();
+            } catch (err) {
+                alert(err.message);
+            } finally {
+                this.currentItem = {};
+            }
         },
         /*removeItem(item) {
             this.chechens = this.chechens.filter(i => i.id !== item.id);
